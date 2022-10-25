@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Tarea_4</string>
+    <string name="resp"> Responsable </string>
+    <string name="nameResp"> Carlos Wilberto Rodriguez Ruiz </string>
+    <string name="nCuenta"> # Cuenta </string>
+    <string name="num"> 201910020179 </string>
+    <string name="start"> Iniciar </string>
+    <string name="gDatos"> Guardar Datos </string>
+    <string name="sDatos"> Ver Datos </string>
+    <string name="cName"> Nombre </string>
+    <string name="Cdesc"> Descripcion </string>
+    <string name="takeFoto"> Tomar Foto </string>
+    <string name="sqlL"> A SQLITE </string>
+
+</resources>
