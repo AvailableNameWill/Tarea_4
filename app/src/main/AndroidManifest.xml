@@ -33,7 +33,6 @@
         </intent>
     </queries>
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -44,6 +43,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Tarea_4"
         tools:targetApi="31">
+        <activity
+            android:name=".View_Foto_Activity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".View_Data_Activity"
             android:exported="false">
@@ -83,12 +89,11 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.tarea_4.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true" >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>

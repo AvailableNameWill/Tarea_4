@@ -7,7 +7,7 @@
     tools:context=".Save_Data_Activity">
 
     <ImageView
-        android:id="@+id/img"
+        android:id="@+id/imgv"
         android:layout_width="372dp"
         android:layout_height="289dp"
         android:layout_marginTop="32dp"
@@ -29,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.069"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img" />
+        app:layout_constraintTop_toBottomOf="@+id/imgv" />
 
     <TextView
         android:id="@+id/textView6"

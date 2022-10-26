@@ -11,6 +11,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,8 +22,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.tarea_4.clases.transacs;
 import com.example.tarea_4.config.conexion;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -35,16 +38,18 @@ public class Save_Data_Activity extends AppCompatActivity {
     private EditText txtDesc;
     private Button btnTake;
     private Button btnSave;
-    private conexion con;
     String PathImagen;
+    Bitmap bImg;
 
     static final int Peticion_captura_imagen = 100;
     static final int peticion_acceso_cam = 201;
+    conexion con;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_data);
+        conexion con = new conexion(this, transacs.tblName, null, 1);
         chargeObj();
 
         btnTake.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +63,9 @@ public class Save_Data_Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(!isEmpty()){
-
+                    saveFoto();
+                    /*con.delete();
+                    Toast.makeText(Save_Data_Activity.this, "bd eliminada", Toast.LENGTH_SHORT).show();*/
                 }
             }
         });
@@ -71,6 +78,9 @@ public class Save_Data_Activity extends AppCompatActivity {
         }else if(txtDesc.getText().toString().isEmpty()){
             Toast.makeText(this, "!!!Aviso \n No puede dejar campos vacios: Descripcion", Toast.LENGTH_SHORT).show();
             return true;
+        }else if(bImg==null) {
+            Toast.makeText(this, "!!!Aviso \n Debe tomar una foto", Toast.LENGTH_SHORT).show();
+            return  true;
         }
         return false;
     }
@@ -91,6 +101,15 @@ public class Save_Data_Activity extends AppCompatActivity {
         if(requestCode == peticion_acceso_cam){
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 TakePhotoDir();
+                /*try {
+                    File f = new File(PathImagen);
+                    Uri furi = Uri.fromFile(f);
+                    System.out.println(furi.toString());
+                    Bitmap imag = MediaStore.Images.Media.getBitmap(this.getContentResolver(),furi);
+                    img.setImageBitmap(imag);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }*/
             }
         }
     }
@@ -100,10 +119,31 @@ public class Save_Data_Activity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == Peticion_captura_imagen && resultCode == RESULT_OK){
-            Bundle extras = data.getExtras();
-            Bitmap imag = (Bitmap) extras.get("data");
-            img.setImageBitmap(imag);
+            File foto = new File(PathImagen);
+            img.setImageURI(Uri.fromFile(foto));
+            bImg = ((BitmapDrawable)img.getDrawable()).getBitmap();
+            if(bImg == null) Toast.makeText(this, "No se guardo", Toast.LENGTH_SHORT).show();
+            else Toast.makeText(this, "Se guardo", Toast.LENGTH_SHORT).show();
             galleryAddPic();
+        }
+    }
+
+    private void saveFoto(){
+        try{
+            conexion con = new conexion(this, transacs.dbName, null, 1);
+            String name = txtName.getText().toString();
+            String desc = txtDesc.getText().toString();
+            ByteArrayOutputStream ba = new ByteArrayOutputStream();
+            bImg.compress(Bitmap.CompressFormat.JPEG, 20, ba);
+            byte[] byImg= ba.toByteArray();
+
+            boolean insert = con.saveData(byImg, name, desc);
+
+            if(insert==true) Toast.makeText(this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
+            else Toast.makeText(this, "Hubo un error", Toast.LENGTH_SHORT).show();
+            clean();
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -139,7 +179,7 @@ public class Save_Data_Activity extends AppCompatActivity {
                 Uri fotoUri = FileProvider.getUriForFile(this, "com.example.tarea_4.fileprovider", foto);
                 Intenttakephoto.putExtra(MediaStore.EXTRA_OUTPUT, fotoUri);
                 startActivityForResult(Intenttakephoto, Peticion_captura_imagen);
-
+                galleryAddPic();
             }
         }
     }
@@ -153,10 +193,17 @@ public class Save_Data_Activity extends AppCompatActivity {
     }
 
     private void chargeObj(){
-        img = (ImageView) findViewById(R.id.img);
+        img = (ImageView) findViewById(R.id.imgv);
         txtName = (EditText) findViewById(R.id.txtName);
         txtDesc = (EditText) findViewById(R.id.txtDesc);
         btnTake =(Button) findViewById(R.id.btnTakeF);
         btnSave = (Button) findViewById(R.id.btnSave);
+    }
+
+    private void clean(){
+        txtName.setText("");
+        txtDesc.setText("");
+        bImg = null;
+        img.setImageBitmap(null);
     }
 }

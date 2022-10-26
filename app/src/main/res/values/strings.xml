@@ -11,5 +11,5 @@
     <string name="Cdesc"> Descripcion </string>
     <string name="takeFoto"> Tomar Foto </string>
     <string name="sqlL"> A SQLITE </string>
-
+    <string name="viewFoto"> Ver Foto </string>
 </resources>

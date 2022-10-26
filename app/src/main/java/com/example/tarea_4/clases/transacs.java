@@ -4,8 +4,8 @@ public class transacs {
     public static final String dbName = "tarea_4";
     public static final String tblName = "fotos";
 
-    public static final String id = "";
-    public static final byte[] img = null;
+    public static final String id = "id";
+    public static final String img = "img";
     public static final String name = "name";
     public static final String description = "description";
 
