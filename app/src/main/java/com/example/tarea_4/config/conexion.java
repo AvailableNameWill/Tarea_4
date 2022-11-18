@@ -44,7 +44,7 @@ public class conexion extends SQLiteOpenHelper {
 
     public void delete(){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("delete from " + transacs.tblName);
+        db.execSQL("delete from " + transacs.tblName); //
     }
 
     public ArrayList<foto> getData(ArrayList<foto> _foto){
